@@ -14,10 +14,11 @@ func GameStart(maxRange int) {
 		secretNumber = 100
 	} else {
 		secretNumber = rand.Intn(maxRange)
-
 	}
+
 	fmt.Println("Escolha um numero")
 	fmt.Scanln(&userInput)
+
 	for {
 		if userInput == secretNumber {
 			fmt.Println("Parabens voce acertou o numero secreto")
