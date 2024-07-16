@@ -13,10 +13,8 @@ func init() {
 	initializers.SyncDB()
 }
 
-// / testes
 func main() {
 	r := gin.Default()
-	/// testes
 	r.POST("/signup", controllers.SignUp)
 	r.POST("/login", controllers.Login)
 	r.GET("/validade", middleware.RequireAuth, controllers.Validade)

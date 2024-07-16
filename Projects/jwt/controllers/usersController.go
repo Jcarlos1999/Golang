@@ -9,6 +9,7 @@ import (
 	"github.com/Jcarlos1999/Golang/Projects/jwt/models"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -38,7 +39,8 @@ func SignUp(c *gin.Context) {
 	}
 
 	//create user
-	user := models.User{Email: body.Email, Password: string(hash)}
+	Id := uuid.NewString()
+	user := models.User{ID: Id, Email: body.Email, Password: string(hash)}
 	result := initializers.DB.Create(&user)
 
 	if result.Error != nil {
@@ -74,11 +76,10 @@ func Login(c *gin.Context) {
 
 	// look up request user
 	var user models.User
-	initializers.DB.First(&user, "email = ?", body.Email)
-
-	if user.ID == 0 {
+	initializers.DB.First(&user, "email= ?", body.Email)
+	if user.ID == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed Invalid email or password",
+			"error": "Failed Invalid email",
 		})
 
 		return
@@ -89,7 +90,7 @@ func Login(c *gin.Context) {
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid email or password",
+			"error": "Invalid password",
 		})
 
 		return

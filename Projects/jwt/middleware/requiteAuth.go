@@ -35,12 +35,13 @@ func RequireAuth(c *gin.Context) {
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
-		// find the user with token sub
 
+		// find the user with token sub
 		var user models.User
 
-		initializers.DB.First(&user, claims["sub"])
-		if user.ID == 0 {
+		initializers.DB.First(&user, "id = ?", claims["sub"])
+		fmt.Println(claims["sub"])
+		if user.ID == "" {
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
 
@@ -53,5 +54,4 @@ func RequireAuth(c *gin.Context) {
 	} else {
 		c.AbortWithStatus(http.StatusUnauthorized)
 	}
-
 }
